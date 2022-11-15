@@ -1,0 +1,96 @@
+---
+title: "p8105_hw1_sef2183"
+author: "Sarah Forrest"
+date: "2022-09-16"
+output: github_document
+---
+```{r load packages}
+library(tidyverse)
+```
+
+# Problem 1
+```{r load data}
+data("penguins", package = "palmerpenguins")
+summary(penguins)
+```
+
+## Dataset Description: 
+* The 8 variables in the `penguins` dataset include: species, island, bill length (mm), bill depth (mm), flipper length (mm), body mass (g), sex, and year. The species variable is a factor variable with 3 levels: Adelie, Chinstrap, and Gentoo. The island variable is also a factor variable with 3 levels: Biscoe, Dream, and Torgersen The bill length and bill depth variables are numeric variables with 1 decimal place. The flipper length, body mass, and year variables are integer variables. Finally, the sex variable is a factor variable with 2 levels: male and female.
+
+* The `penguins` dataset contains `r nrow(penguins)` observations (rows) and `r ncol(penguins)` variables (columns). 
+
+* The mean flipper length in the `penguins` dataset is `r mean(penguins$flipper_length_mm, na.rm=TRUE)` mm.
+
+## Scatterplot of Flipper Length (mm) vs. Bill Length (mm):
+### Create Scatterplot
+```{r create scatterplot}
+ggplot(penguins, aes(x = bill_length_mm, y = flipper_length_mm, color = species)) + geom_point()
+```
+
+### Save Scatterplot in p8105_hw1_sef2183 Project Directory
+```{r save scatterplot}
+ggsave("ScatterPlot.pdf", height = 4, width = 6)
+```
+
+# Problem 2
+
+## Create the Dataframe "p2_df"
+```{r create dataframe}
+p2_df = 
+  tibble(
+    random = rnorm(n = 10),
+    vec_logical = random > 0,
+    vec_character = c("My", "name", "is", "Sarah", "and", "I", "live", "in", "Morningside", "Heights"),
+    vec_factor = factor(c("yes", "no", "maybe", "yes", "maybe", "yes", "no", "no", "maybe", "no"))
+  )
+```
+
+```{r view dataframe}
+p2_df 
+```
+I created dataframe called "p2_df" with: 
+
+* A random sample of size 10 from a standard normal distribution with the name "random"
+* A logical vector indicating whether elements of the sample are greater than 0 with the name "vec_logical"
+* A character vector of length 10 with the name "vec_character"
+* A factor vector of length 10, with 3 different factor “levels” with the name "vec_factor"
+
+## Check the Variable Means
+### Mean of the random sample variable "random"
+```{r check random mean}
+mean(p2_df %>% pull(random))
+```
+### Mean of the logical vector "vec_logical"
+```{r check logical mean}
+mean(p2_df %>% pull(vec_logical))
+```
+### Mean of the character vector "vec_character"
+```{r check character mean}
+mean(p2_df %>% pull(vec_character))
+```
+### Mean of the factor vector "vec_factor"
+```{r check factor mean}
+mean(p2_df %>% pull(vec_factor))
+```
+
+When I try to take the mean of each variable in my "p2_df" dataframe:
+
+* The mean of the random sample variable "random" is `r mean(p2_df$random)`
+* The mean of the logical vector "vec_logical" is `r mean(p2_df$vec_logical)`
+* The mean of the character vector "vec_character" returns `r mean(p2_df$vec_character)` because the argument is not numeric or logical
+* The mean of the factor vector "vec_factor" returns `r mean(p2_df$vec_factor)` because the argument is not numeric or logical
+
+## Convert Variable Types
+```{r change variable types, echo = TRUE, results = 'hide', warning = FALSE}
+as.numeric(p2_df$vec_logical)
+as.numeric(p2_df$vec_character)
+as.numeric(p2_df$vec_factor)
+```
+
+When I try to apply the `as.numeric` function to the logical, character, and factor variables:
+
+* The logical vector "vec_logical" returns: `r as.numeric(p2_df$vec_logical)`, with 0s indicating values of `FALSE` and 1s indicating values of `TRUE`.
+* The character vector "vec_character" returns: `r as.numeric(p2_df$vec_character)` because R cannot convert character variables to numeric, so it introduces NAs by coersion.
+* The factor vector "vec_factor" returns: `r as.numeric(p2_df$vec_factor)`, with 1s indicating values of "maybe", 2s indicating values of "no", and 3s indicating values of "yes".
+
+This helps explain why when I take the mean of the logical vector "vec_logical" R returns a value, while when I try to take the mean of the character vector "vec_character" R does not, and instead returns `r mean(p2_df$vec_character)`. 
